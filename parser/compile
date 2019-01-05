@@ -1,1 +1,0 @@
-gcc -ggdb scanner.c ft_realloc.c jump_table.c ft_parser.h libft.a -o parser 
