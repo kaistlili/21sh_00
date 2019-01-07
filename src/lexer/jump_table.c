@@ -18,22 +18,27 @@ int	handle_dquote(char **input, t_token *token)
 {
 	char *iter;
 
-	iter = *input + 1;
+	iter = *input;
+	if (*iter == '"')
+	{
+		str_putchar(*iter, &(token->data));
+		iter++;
+	}
 	while (*iter)
 	{
 		if (*iter == '"')
 		{
+			str_putchar(*iter, &(token->data));
 			*input = iter + 1;
 			handle_common(input, token);
 			return (0);
 		}
-		else if (*iter == '\\')
+		else if ((*iter == '\\') && (*(iter + 1)))
 		{
-			if (*(iter + 1) == '"')
-				iter++;
-		}
-		else
 			str_putchar(*iter, &(token->data));
+			iter++;
+		}
+		str_putchar(*iter, &(token->data));
 		iter++;
 	}
 	*input = iter;
@@ -42,9 +47,17 @@ int	handle_dquote(char **input, t_token *token)
 
 int handle_squote(char **input, t_token *token)
 {
-	(void)input;
-	(void)token;
-	return (0);
+	while (**input)
+	{
+		str_putchar(**input, &(token->data));
+		if (**input == '\'')
+		{
+			*input = *input + 1;
+			return (0);
+		}
+		*input = *input + 1;
+	}
+	return (SQUOTE_ERR);
 }
 
 int	handle_digit(char **input, t_token *token)
@@ -73,17 +86,26 @@ int	handle_digit(char **input, t_token *token)
 int	handle_common(char **input, t_token *token)
 {
 	char 			*iter;
+	int				err_ret;
 	static	char	*ops = "|&><;";
 
 	iter = *input;
+	err_ret = 0;
 	while (*iter)
 	{
 		if (*iter == '"')
-			handle_dquote(&iter, token);
+			err_ret = handle_dquote(&iter, token);
+		else if (*iter == '\'')
+			err_ret = handle_squote(&iter, token);
+		if (err_ret)
+			return (err_ret);
 		if ((ft_is_ifs(*iter)) || (ft_strchr(ops, *iter)))
 			break;
-		else if (*iter == '\\')
+		else if ((*iter == '\\') && (*(iter + 1)))
+		{
+			str_putchar(*iter, &(token->data));
 			iter++;
+		}
 		str_putchar(*iter, &(token->data));
 		iter++;
 	}

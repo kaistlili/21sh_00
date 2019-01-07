@@ -82,6 +82,8 @@ static void		silence_ac_av(char ac, char **av)
 	(void)av;
 }
 
+void	ft_test_lexer(char *line);
+
 void	print_tokens(t_token *start)
 {
 	while (start)
@@ -95,7 +97,7 @@ int				main(int ac, char **av, char **env)
 {
 	char		*line;
 	t_command	**command_lst;
-	t_token		*tok;
+	//t_token		*tok;
 	int			ret;
 
 	silence_ac_av(ac, av);
@@ -113,8 +115,9 @@ int				main(int ac, char **av, char **env)
 		free_cmdlst(*command_lst);*/
 	/*	if (ft_tokenizer(line, &tok) == 0)
 		{*/
-		tok = ft_tokenizer(line);
-			print_tokens(tok);	
+//		tok = ft_tokenizer(line);
+		ft_test_lexer(line);
+//		print_tokens(tok);	
 		free(line);
 		*command_lst = NULL;
 		show_prompt();

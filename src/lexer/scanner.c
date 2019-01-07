@@ -125,6 +125,88 @@ int	ft_tokenizer(char *line, t_token **head)
 	return (0);
 }
 */
+/*
+int next_token(char **line, t_token *token)
+{
+	static char 	*iter = NULL;
+	static	t_func	table[TABLESZ] = {NULL};
+	int				ret;
+
+	if (!table[0])
+		init_jump_table(table);
+	if ((*line) || (!iter))
+		iter = *line;	
+	while (ft_is_ifs(*iter))
+			iter++;
+	if (*iter)
+	{
+		ret = table[(int)*iter](&iter, token);	
+		*line = iter;	
+		return (ret);
+	}
+	*line = iter;	
+	iter = NULL;
+	token->type = NEWLINE;
+	return (ENDOFINPUT);
+}
+
+int next_token(char **line, t_token **head)
+{
+	static char 	*iter = NULL;
+	static	t_func	table[TABLESZ] = {NULL};
+	t_token 		*token;
+	int				ret;
+
+	if (!table[0])
+		init_jump_table(table);
+	if ((!iter) | (line != NULL))
+		iter = *line;	
+	if (!(token = new_token(0)))
+		return (MEMERR);
+	while (ft_is_ifs(*iter))
+			iter++;
+	if (*iter)
+	{
+		ret = table[(int)*iter](&iter, token);	
+		add_token(head, token);
+		*line = iter;	
+		return (ret);
+	}
+	*line = iter;	
+	iter = NULL;
+	token->type = NEWLINE;
+	add_token(head, token);
+	return (ENDOFINPUT);
+}
+*/
+
+int next_token(char *line, t_token **head)
+{
+	static char 	*iter = NULL;
+	static	t_func	table[TABLESZ] = {NULL};
+	t_token 		*token;
+	int				ret;
+
+	if (!table[0])
+		init_jump_table(table);
+	if ((!iter) | (line != NULL))
+		iter = line;	
+	if (!(token = new_token(0)))
+		return (MEMERR);
+	while (ft_is_ifs(*iter))
+			iter++;
+	if (*iter)
+	{
+		ret = table[(int)*iter](&iter, token);	
+		add_token(head, token);
+		return (ret);
+	}
+	iter = NULL;
+	token->type = NEWLINE;
+	add_token(head, token);
+	return (ENDOFINPUT);
+}
+
 t_token	*ft_tokenizer(char *line)
 {
 	static	t_func	table[TABLESZ];
@@ -146,7 +228,51 @@ t_token	*ft_tokenizer(char *line)
 		while (ft_is_ifs(*line))
 			line++;
 	}
+	add_token(&head, new_token(1));
 	return (head);
+}
+
+void	ft_test_lexer(char *line)
+{
+	t_token *head = NULL;
+	int ret;
+	ret =  next_token(line, &head);
+	while (ret != ENDOFINPUT)
+		ret = next_token(NULL, &head);
+	while (head->type != NEWLINE)
+	{
+
+		ft_printf("type %d | str %s\n", head->type, head->data.str);
+		head = head->next;
+	}
+
+/*	t_token *tok;
+	int		ret;
+	char	*tmp;
+	char c;
+
+
+
+
+	tok = new_token(0);
+	while ((ret = next_token(&line, tok)) != ENDOFINPUT)
+	{
+		while ((ret == DQUOTE_ERR) || (ret == SQUOTE_ERR))
+		{
+			ft_putstr("> ");
+			get_next_line(0, &tmp);
+			line = tmp;
+			if (ret == DQUOTE_ERR)
+				ret = handle_dquote(&line, tok);
+			else if (ret == SQUOTE_ERR)
+				ret = handle_squote(&line, tok);
+		}
+		ft_printf("type %d | str %s\n", tok->type, tok->data.str);
+		read(0, &c, 1);
+		tok = new_token(0);
+		if (c == 27)
+			break;
+	}*/
 }
 /*
 int main(int ac, char **av)

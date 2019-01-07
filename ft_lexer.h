@@ -16,6 +16,10 @@
 #include "minishell.h"
 
 #define DQUOTE_ERR 10
+#define SQUOTE_ERR 11
+#define ENDOFINPUT 12
+
+
 #define INPUTSZ 1024
 
 typedef	struct	s_str
@@ -89,6 +93,13 @@ int handle_column(char **input, t_token *token);
 
 int	str_putchar(char c, t_str *data);
 int	ft_str_realloc(t_str *str_st, size_t newsz);
+
 int	ft_is_ifs(char c);
+
+void	add_token(t_token **head, t_token *to_add);
+
 t_token	*ft_tokenizer(char *line);
+//int	next_token(char **line, t_token *token);
+int	next_token(char *line, t_token **head);
+
 #endif
