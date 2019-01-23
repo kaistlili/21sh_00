@@ -24,37 +24,34 @@ literal tokens
 
 	complete_cmd	: list separator | list 
 
-	list			: and_or list_suffix | and_or
+	list			: list
+
+	list			: and_or list_suffix
 	
-	list_suffix		: separator_op and_or list_suffix 
+	list_suffix		: separator_op and_or list_suffix | VOID 
 
-	and_or			: pipeline and_or_suffix | pipeline
+	and_or			: pipeline and_if_suffix | pipeline or_if_suffix
 
-	and_or_suffix	: AND_IF linebreak pipeline and_or_suffix 
+	and_if_suffix	: AND_IF linebreak pipeline and_if_suffix | VOID
 
-	pipeline		: simple_cmd pipeline_suffix | simple_cmd
+	or_if_suffix	: OR_IF linebreak pipeline or_if_suffix | VOID 
 
-	pipeline_suffix : PIPE linebreak simple_cmd pipeline_suffix
+	pipeline		: simple_cmd pipeline_suffix
 
-	simple_cmd		: cmd_pre cmd_word cmd_suffix 
-					| cm_pre cmd_word
+	pipeline_suffix : PIPE linebreak simple_cmd pipeline_suffix | VOID 
+
+	simple_cmd		: cmd_pre cmd_word cmd_suffix | cm_pre cmd_word
 					| cmd_pre
-					| cmd_name cmd_suffix
-					| cmd_name
 
-	cmd_pre			: io_redir 
-					| ASSIGN 
-					| io_redir cmd_pre 
-					| ASSIGN cmd_pre
+	cmd_word		: WORD | ASSIGNEMENT_WORD
 
-	cmd_suf			: io_redir 
-					| WORD 
-					| io_redir cmd_suf 
-					| WORD cmd_suf
+	cmd_pre			: io_redir | cmd_pre io_redir | ASSIGNEMENT_WORD
+					| cmd_pre ASSIGNEMENT_WORD
 
-	cmd_word		: WORD /* rule 7b
-
-	cmd_name		: WORD /* rule 7a
+	cmd_pre			: io_redir | cmd_pre io_redir | ASSIGNEMENT_WORD
+					| cmd_pre ASSIGNEMENT_WORD
+	
+	cmd_suf			: io_redir | cmd_suf io_redir | WORD | cmd_suf WORD
 	
 	io_redir		: io_file | IO_NUM io_file
 	

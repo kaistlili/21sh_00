@@ -86,9 +86,12 @@ void	ft_test_lexer(char *line);
 
 void	print_tokens(t_token *start)
 {
+	char types[100][100] = {"WORD","NEWLINE","IO_NUM","ASSIGN", "PIPE", "SEMI_COL",
+				"AMPERS","ANDIF", "ORIF", "LESSAND", "GREATAND", "DGREAT", "LESS",
+				"GREAT"};
 	while (start)
 	{
-		ft_printf("type %d |  str %s\n", start->type, start->data.str);
+		ft_printf("type %s |  str %s\n", types[start->type], start->data.str);
 		start = start->next;
 	}
 }
@@ -97,7 +100,7 @@ int				main(int ac, char **av, char **env)
 {
 	char		*line;
 	t_command	**command_lst;
-	//t_token		*tok;
+	t_token		*tok;
 	int			ret;
 
 	silence_ac_av(ac, av);
@@ -115,9 +118,10 @@ int				main(int ac, char **av, char **env)
 		free_cmdlst(*command_lst);*/
 	/*	if (ft_tokenizer(line, &tok) == 0)
 		{*/
-//		tok = ft_tokenizer(line);
-		ft_test_lexer(line);
-//		print_tokens(tok);	
+tok = ft_tokenizer(line);
+//		ft_test_lexer(line);
+		test_sh_parser(tok);
+		print_tokens(tok);	
 		free(line);
 		*command_lst = NULL;
 		show_prompt();

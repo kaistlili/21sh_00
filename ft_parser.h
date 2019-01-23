@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lexer.h                                         :+:      :+:    :+:   */
+/*   ft_parser.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktlili <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,49 +10,37 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_LEXER_H
-# define FT_LEXER_H
+#ifndef FT_PARSER_H
+# define FT_PARSER_H
 
-#include "minishell.h"
+#include "ft_lexer.h"
 
-#define DQUOTE_ERR 10
-#define SQUOTE_ERR 11
-#define ENDOFINPUT 12
-
-
-#define INPUTSZ 1024
-
-typedef	struct	s_str
+/*
+typedef enum	e_non_term
 {
-	char	*str;
-	size_t	size;
-	size_t	len;
-}				t_str;
+	complete_cmd,
+	list,
+	and_or,
+	pipeline,
+	simple_cmd,
+	cmd_word,
+	cmd_pre,
+	cmd_suf,
+	io_redir,
+	io_file,
+	filename,
+	separator,
+	separator_op,
+	line_break,
+	new_line_lst
+}				t_non_term;
 
-typedef	enum	e_token_type
+typeef	union	u_type
 {
-	WORD,
-	NEWLINE,
-	IO_NUM,
-	ASSIGN,
-	PIPE,
-	SEMI_COL,
-	AMPERS,
-	AND_IF,
-	OR_IF,
-	LESSAND,
-	GREATAND,
-	DGREAT,
-	LESS,
-	GREAT,
-}				t_token_type;
-
-typedef	struct	s_token
-{
-	t_token_type	type;
-	t_str			data;
-	struct s_token	*next;	
-}				t_token;
+	enum e_non_term	terminal;
+	enum e_non_term non_terminal;	
+}				t_type;
+*/
 
 typedef struct	s_parser
 {
@@ -62,13 +50,11 @@ typedef struct	s_parser
 }				t_parser;
 
 
-
-typedef int (*t_func)(char**, t_token*);
-
+/**/
+typedef struct s_token t_token;
 
 int	test_sh_parser(t_token *start);
-
-
+/**/
 int	parser_is_assign(t_token const *token);
 int	expect_linebreak(t_parser *parser);
 int	expect_separator_op(t_parser *parser);
@@ -84,32 +70,11 @@ int	expect_cmd_name(t_parser *parser);
 int	expect_simeple_cmd(t_parser *parser);
 int	expect_pipeline_suffix(t_parser *parser);
 int	expect_pipeline(t_parser *parser);
-int	expect_and_or_suffix(t_parser *parser);
+int	expect_or_if_suffix(t_parser *parser);
+int	expect_and_if_suffix(t_parser *parser);
 int	expect_and_or(t_parser *parser);
 int	expect_list_suffix(t_parser *parser);
 int	expect_list(t_parser *parser);
 int	expect_complete_cmd(t_parser *parser);
-
-
-int handle_dquote(char **input, t_token *token);
-int handle_digit(char **input, t_token *token);
-int handle_common(char **input, t_token *token);
-int handle_ampersand(char **input, t_token *token);
-int handle_squote(char **input, t_token *token);
-int handle_semic(char **input, t_token *token);
-int handle_less(char **input, t_token *token);
-int handle_great(char **input, t_token *token);
-int handle_column(char **input, t_token *token);
-
-int	str_putchar(char c, t_str *data);
-int	ft_str_realloc(t_str *str_st, size_t newsz);
-
-int	ft_is_ifs(char c);
-
-void	add_token(t_token **head, t_token *to_add);
-
-t_token	*ft_tokenizer(char *line);
-//int	next_token(char **line, t_token *token);
-int	next_token(char *line, t_token **head);
-
+//int	expect_(t_parser *parser);
 #endif

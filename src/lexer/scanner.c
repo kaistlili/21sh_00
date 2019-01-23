@@ -12,7 +12,6 @@
 
 #include "../../ft_lexer.h"
 
-
 t_token	*new_token(int	type)
 {
 	t_token *new;
@@ -218,6 +217,8 @@ t_token	*ft_tokenizer(char *line)
 		init_jump_table(table);
 	flag = 1;
 	head = NULL;
+	while (ft_is_ifs(*line))
+		line++;
 	while (*line)
 	{
 		tmp = new_token(0);
@@ -246,46 +247,4 @@ void	ft_test_lexer(char *line)
 		head = head->next;
 	}
 
-/*	t_token *tok;
-	int		ret;
-	char	*tmp;
-	char c;
-
-
-
-
-	tok = new_token(0);
-	while ((ret = next_token(&line, tok)) != ENDOFINPUT)
-	{
-		while ((ret == DQUOTE_ERR) || (ret == SQUOTE_ERR))
-		{
-			ft_putstr("> ");
-			get_next_line(0, &tmp);
-			line = tmp;
-			if (ret == DQUOTE_ERR)
-				ret = handle_dquote(&line, tok);
-			else if (ret == SQUOTE_ERR)
-				ret = handle_squote(&line, tok);
-		}
-		ft_printf("type %d | str %s\n", tok->type, tok->data.str);
-		read(0, &c, 1);
-		tok = new_token(0);
-		if (c == 27)
-			break;
-	}*/
 }
-/*
-int main(int ac, char **av)
-{
-	t_token *tok;
-
-	if (av[1] == NULL)
-		return (0);
-	ft_printf("line %s\n", av[1]);	
-	tok = ft_tokenizer(av[1]);
-	while (tok)
-	{
-		ft_printf("type %d | str %s\n", tok->type, tok->data.str);
-		tok = tok->next;
-	}
-}*/

@@ -10,17 +10,14 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
+NAME = 21sh 
 
 SRC_PATH = src
-
-LEX_PATH = src/lexer
 
 SRC_NAME =	main.c \
 			util.c \
 			util2.c \
 			clean_path.c \
-			parser.c \
 			execute.c \
 			changedir.c \
 			spawn_bin.c \
@@ -37,7 +34,9 @@ SRC_NAME =	main.c \
 			bin_path.c \
 			dynamic_buff.c
 
-SRC_LEX = scanner.c jump_table.c ft_realloc.c
+LEX_PATH = src/lexer
+
+SRC_LEX = scanner.c jump_table.c ft_realloc.c sh_parser.c parser_rules.c
 
 OBJ_PATH = obj
 
@@ -51,19 +50,21 @@ SRC = $(addprefix $(SRC_PATH)/,$(SRC_NAME))
 
 OBJ = $(addprefix $(OBJ_PATH)/,$(OBJ_NAME))
 
+CC = clang
+
 all:	$(NAME)
 
 $(NAME): $(OBJ)
 	$(MAKE) -C ./lib/
-	gcc $(OBJ) $(LIB) -o $@
+	$(CC) $(OBJ) $(LIB) -o $@
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	mkdir -p $(OBJ_PATH)
-	gcc -I. $(FLAGS) -o $@ -c $<
+	$(CC) -I. $(FLAGS) -o $@ -c $<
 
 $(OBJ_PATH)/%.o: $(LEX_PATH)/%.c
 	mkdir -p $(OBJ_PATH)
-	gcc -I. $(FLAGS) -o $@ -c $<
+	$(CC) -I. $(FLAGS) -o $@ -c $<
 
 clean:
 	$(MAKE) -C ./lib/ clean
