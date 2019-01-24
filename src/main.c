@@ -118,7 +118,7 @@ int				main(int ac, char **av, char **env)
 		free_cmdlst(*command_lst);*/
 	/*	if (ft_tokenizer(line, &tok) == 0)
 		{*/
-tok = ft_tokenizer(line);
+		tok = ft_tokenizer(line);
 //		ft_test_lexer(line);
 		test_sh_parser(tok);
 		print_tokens(tok);	

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   jump_table.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktlili <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,6 +13,8 @@
 #include "../../ft_lexer.h"
 /*
 add mem error exit for str_putchar
+
+when dquote or squtote is incomplete, somehow we free in add_token
 */
 int	handle_dquote(char **input, t_token *token)
 {
@@ -21,24 +23,28 @@ int	handle_dquote(char **input, t_token *token)
 	iter = *input;
 	if (*iter == '"')
 	{
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		iter++;
 	}
 	while (*iter)
 	{
 		if (*iter == '"')
 		{
-			str_putchar(*iter, &(token->data));
+			if (str_putchar(*iter, &(token->data)) == MEMERR)
+				return (MEMERR);
 			*input = iter + 1;
 			handle_common(input, token);
 			return (0);
 		}
 		else if ((*iter == '\\') && (*(iter + 1)))
 		{
-			str_putchar(*iter, &(token->data));
+			if (str_putchar(*iter, &(token->data)) == MEMERR)
+				return (MEMERR);
 			iter++;
 		}
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		iter++;
 	}
 	*input = iter;
@@ -49,7 +55,8 @@ int handle_squote(char **input, t_token *token)
 {
 	while (**input)
 	{
-		str_putchar(**input, &(token->data));
+		if (str_putchar(**input, &(token->data)) == MEMERR)
+			return (MEMERR);
 		if (**input == '\'')
 		{
 			*input = *input + 1;
@@ -74,9 +81,14 @@ int	handle_digit(char **input, t_token *token)
 				token->type = IO_NUM;
 			break;
 		}
-		else if (*iter == '\\')
+		else if ((*iter == '\\') && (*(iter + 1)))
+		{
+			if (str_putchar(*iter, &(token->data)) == MEMERR)
+				return (MEMERR);
 			iter++;
-		str_putchar(*iter, &(token->data));
+		}
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		iter++;
 	}
 	*input = iter;
@@ -93,6 +105,7 @@ int	handle_common(char **input, t_token *token)
 	err_ret = 0;
 	while (*iter)
 	{
+		*input = iter; /*c'est moche ca */
 		if (*iter == '"')
 			err_ret = handle_dquote(&iter, token);
 		else if (*iter == '\'')
@@ -103,10 +116,12 @@ int	handle_common(char **input, t_token *token)
 			break;
 		else if ((*iter == '\\') && (*(iter + 1)))
 		{
-			str_putchar(*iter, &(token->data));
+			if (str_putchar(*iter, &(token->data)) == MEMERR)
+				return (MEMERR);
 			iter++;
 		}
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		iter++;
 	}
 	*input = iter;
@@ -116,7 +131,8 @@ int	handle_common(char **input, t_token *token)
 int	handle_semic(char **input, t_token *token)
 {
 	token->type = SEMI_COL;
-	str_putchar(**input, &(token->data));
+	if (str_putchar(**input, &(token->data)) == MEMERR)
+		return (MEMERR);
 	*input = *input + 1;
 	return (0);
 }	
@@ -126,11 +142,13 @@ int	handle_column(char **input, t_token *token)
 	char *iter;
 
 	iter = *input;
-	str_putchar(*iter, &(token->data));
+	if (str_putchar(*iter, &(token->data)) == MEMERR)
+		return (MEMERR);
 	if (*(iter + 1) == '|')
 	{
 		iter++;
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		token->type = OR_IF;
 	}
 	else
@@ -144,11 +162,13 @@ int	handle_ampersand(char **input, t_token *token)
 	char *iter;
 
 	iter = *input;
-	str_putchar(*iter, &(token->data));
+	if (str_putchar(*iter, &(token->data)) == MEMERR)
+		return (MEMERR);
 	if (*(iter + 1) == '&')
 	{
 		iter++;
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		token->type = AND_IF;
 	}
 	else
@@ -162,18 +182,21 @@ int	handle_great(char **input, t_token *token)
 	char *iter;
 
 	iter = *input;
-	str_putchar(*iter, &(token->data));
+	if (str_putchar(*iter, &(token->data)) == MEMERR)
+		return (MEMERR);
 	token->type = GREAT;
 	if (*(iter + 1) == '>')
 	{
 		iter++;
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		token->type = DGREAT;
 	}
 	else if (*(iter + 1) == '&')
 	{
 		iter++;
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		token->type = GREATAND;
 	}
 	*input = iter + 1;
@@ -185,12 +208,14 @@ int handle_less(char **input, t_token *token)
 	char *iter;
 
 	iter = *input;
-	str_putchar(*iter, &(token->data));
+	if (str_putchar(*iter, &(token->data)) == MEMERR)
+		return (MEMERR);
 	token->type = LESS;
 	if (iter[1] == '&')
 	{
 		iter++;
-		str_putchar(*iter, &(token->data));
+		if (str_putchar(*iter, &(token->data)) == MEMERR)
+			return (MEMERR);
 		token->type = LESSAND;
 	}
 /*	else if (iter[1] == '<')

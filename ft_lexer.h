@@ -57,18 +57,30 @@ typedef	struct	s_token
 typedef struct	s_parser
 {
 	struct s_token	*current;
-	struct s_token *head;
+	struct s_token 	*head;
+	void			*cmd;
 //	t_ast	**head;
 }				t_parser;
 
-
-
+/*
+Lexer jump table
+*/
 typedef int (*t_func)(char**, t_token*);
 
+int handle_dquote(char **input, t_token *token);
+int handle_digit(char **input, t_token *token);
+int handle_common(char **input, t_token *token);
+int handle_ampersand(char **input, t_token *token);
+int handle_squote(char **input, t_token *token);
+int handle_semic(char **input, t_token *token);
+int handle_less(char **input, t_token *token);
+int handle_great(char **input, t_token *token);
+int handle_column(char **input, t_token *token);
 
 int	test_sh_parser(t_token *start);
-
-
+/*
+Parser fn
+*/
 int	parser_is_assign(t_token const *token);
 int	expect_linebreak(t_parser *parser);
 int	expect_separator_op(t_parser *parser);
@@ -89,17 +101,6 @@ int	expect_and_or(t_parser *parser);
 int	expect_list_suffix(t_parser *parser);
 int	expect_list(t_parser *parser);
 int	expect_complete_cmd(t_parser *parser);
-
-
-int handle_dquote(char **input, t_token *token);
-int handle_digit(char **input, t_token *token);
-int handle_common(char **input, t_token *token);
-int handle_ampersand(char **input, t_token *token);
-int handle_squote(char **input, t_token *token);
-int handle_semic(char **input, t_token *token);
-int handle_less(char **input, t_token *token);
-int handle_great(char **input, t_token *token);
-int handle_column(char **input, t_token *token);
 
 int	str_putchar(char c, t_str *data);
 int	ft_str_realloc(t_str *str_st, size_t newsz);

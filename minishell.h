@@ -25,6 +25,25 @@
 # define ENVERR 3
 # define ACCERR 4
 
+
+typedef struct			s_redir
+{
+	struct s_token 		*left;
+	struct s_token		*right;
+	struct s_token		*op;
+	struct s_redir		*next;
+}						t_redir;
+
+typedef	struct			s_simple_cmd
+{
+	struct s_token		*cmd_name;
+	struct s_token		*args_lst;
+	struct s_token		*assign_lst;
+	struct s_redir		*redir_lst;
+}						t_simple_cmd;
+/*
+	minishell cmd
+*/
 typedef	struct			s_command
 {
 	char				**args;
