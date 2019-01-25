@@ -80,7 +80,6 @@ int next_dquote(char *str, int index)
 	while ((str[index] != 0) && (str[index] != '"'))
 		index++;
 	return (index);
-
 }
 
 
@@ -132,8 +131,3 @@ int handle_tilde(t_token *word)
 	}
 	return (0);
 }
-/*
-int	ft_wordexp(t_token *word)
-{
-	
-}*/

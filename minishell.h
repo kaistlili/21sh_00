@@ -119,6 +119,7 @@ void					update_env_pwd(char *pwd, char *curpath);
 int						cd_error(int errnum, char *str);
 char					*getoldpwd(void);
 /* wordexp */
+typedef struct s_str t_str;
 int	handle_tilde(struct s_token *word);
-
+int	insert_str(t_str *word, int *index, char *to_insert);
 #endif
