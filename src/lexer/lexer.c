@@ -235,7 +235,7 @@ t_token	*ft_tokenizer(char *line)
 		tmp = new_token(0);
 		if (!tmp)
 			return (NULL);
-		if ((line) > 0 )
+		if ((*line) > 0 )
 			table[(int)*line](&line, tmp);
 		else
 			table[1](&line, tmp);

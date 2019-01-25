@@ -38,7 +38,9 @@ int	expect_separator_op(t_parser *parser)
 		|| (parser->current->type == SEMI_COL))
 	{
 		parser->current = parser->current->next;
+		#ifdef DEBUG
 		ft_printf("validated sep_op\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -71,7 +73,9 @@ int	expect_filename(t_parser *parser)
 		if (build_redir(parser->current, parser->current_redir) == MEMERR)
 			return (MEMERR);
 		parser->current = parser->current->next;
+		#ifdef DEBUG
 		ft_printf("validated filename\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -94,7 +98,9 @@ int	expect_io_file(t_parser *parser)
 		parser->current = parser->current->next;
 		if (expect_filename(parser))
 		{
+			#ifdef DEBUG
 			ft_printf("validated io_file\n");
+			#endif
 			return (1);
 		}
 	}
@@ -122,13 +128,18 @@ int	expect_io_redir(t_parser *parser)
 		parser->current = parser->current->next;
 		if (expect_io_file(parser))
 		{
+			#ifdef DEBUG
 			ft_printf("validated io_redir\n");
+			#endif
 			add_redir_lst(redir, &(parser->cmd->redir_lst));
 			return (1);
 		}
 	}
 	else if (expect_io_file(parser))
 	{
+		#ifdef DEBUG
+		ft_printf("validated io_redir\n");
+		#endif
 		add_redir_lst(redir, &(parser->cmd->redir_lst));
 		return (1);
 	}
@@ -151,7 +162,9 @@ int	expect_assign(t_parser *parser)
 		if (build_cmd(parser->current, ((t_simple_cmd*)(parser->cmd))) == MEMERR)
 			return (MEMERR);
 		parser->current = parser->current->next;
+		#ifdef DEBUG
 		ft_printf("validated assign\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -167,7 +180,9 @@ int	expect_cmd_pre(t_parser *parser)
 		|| (expect_assign(parser)))
 	{
 		expect_cmd_pre(parser);
+		#ifdef DEBUG
 		ft_printf("validated cmd_pre\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -184,7 +199,9 @@ int	expect_cmd_suffix(t_parser *parser)
 		|| (expect_word(parser)))
 	{
 		expect_cmd_suffix(parser);
+		#ifdef DEBUG
 		ft_printf("validated cmd_suffix\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -202,7 +219,9 @@ int	expect_word(t_parser *parser)
 		if (build_cmd(parser->current, ((t_simple_cmd*)(parser->cmd))) == MEMERR)
 			return (MEMERR);
 		parser->current = parser->current->next;
+		#ifdef DEBUG
 		ft_printf("validated word\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -221,7 +240,9 @@ int	expect_cmd_name(t_parser *parser)
 		if (build_cmd(parser->current, ((t_simple_cmd*)(parser->cmd))) == MEMERR)
 			return (MEMERR);
 		parser->current = parser->current->next;
+		#ifdef DEBUG
 		ft_printf("validated cmd_name\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -243,7 +264,9 @@ int	expect_simple_cmd(t_parser *parser)
 	{
 		if (expect_cmd_name(parser))
 			expect_cmd_suffix(parser);
+		#ifdef DEBUG
 		ft_printf("validated simple with pre\n%");
+		#endif
 		if (add_to_pipeline(parser) == MEMERR)
 			return (MEMERR);
 		return (1);
@@ -251,7 +274,9 @@ int	expect_simple_cmd(t_parser *parser)
 	else if (expect_cmd_name(parser))
 	{
 		expect_cmd_suffix(parser);
+		#ifdef DEBUG
 		ft_printf("validated simple without pre\n");
+		#endif
 		if (add_to_pipeline(parser) == MEMERR)
 			return (MEMERR);
 		return (1);
@@ -278,7 +303,9 @@ int	expect_pipeline_suffix(t_parser *parser)
 			parser->current = backtrack;	
 			return (0);
 		}
+		#ifdef DEBUG
 		ft_printf("validated pipeline_suffx\n");
+		#endif
 		expect_pipeline_suffix(parser);
 	}
 	return (1);
@@ -296,8 +323,10 @@ int	expect_pipeline(t_parser *parser)
 	if (expect_simple_cmd(parser))
 	{
 		expect_pipeline_suffix(parser);
+		#ifdef DEBUG
 		ft_printf("validated pipeline\n");
-		test_pipeline(parser);
+		#endif
+	//	test_pipeline(parser);
 		return (1);
 	}
 	parser->current = backtrack;
@@ -324,7 +353,9 @@ int	expect_and_or_suffix(t_parser *parser)
 			return (0);
 		}
 		expect_and_or_suffix(parser);
+		#ifdef DEBUG
 		ft_printf("validated and_or_suffix\n");
+		#endif
 		return (1);
 	}
 	return (0);
@@ -343,7 +374,9 @@ int	expect_and_or(t_parser *parser)
 	if (expect_pipeline(parser))
 	{
 		expect_and_or_suffix(parser);
+#ifdef DEBUG
 		ft_printf("validated and_or\n");
+		#endif
 		return (1);
 	}
 	parser->current = backtrack;
@@ -368,7 +401,9 @@ int	expect_list_suffix(t_parser *parser)
 		}
 		expect_list_suffix(parser);
 	}
+	#ifdef DEBUG
 	ft_printf("validated list_suffix\n");
+	#endif
 	return (1);
 }
 
@@ -383,8 +418,10 @@ int	expect_list(t_parser *parser)
 	backtrack = parser->current;
 	if (expect_and_or(parser))
 	{
-		expect_list_suffix(parser);
+ 		expect_list_suffix(parser);
+		#ifdef DEBUG
 		ft_printf("validated list\n");
+		#endif
 		return (1);
 	}
 	parser->current = backtrack;

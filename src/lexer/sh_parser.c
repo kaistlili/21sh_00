@@ -31,7 +31,7 @@ int		parser_is_assign(t_token const *token)
 		i++;
 	if (ptr[i] != '=')
 		return (0);
-	if ((parser_is_name_c(ptr[0])) && (ft_isdigit(ptr[0])))
+	if (ft_isdigit(ptr[0]))
 		return (0);
 	j = 1;
 	while (j < i)

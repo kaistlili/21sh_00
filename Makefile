@@ -38,9 +38,13 @@ LEX_PATH = src/lexer
 
 SRC_LEX = lexer.c jump_table.c ft_realloc.c sh_parser.c parser_rules.c parser_tools.c
 
+WORDEXP_PATH = src/ft_wordexp
+
+SRC_WORDEXP = ft_wordexp.c
+
 OBJ_PATH = obj
 
-OBJ_NAME = $(SRC_NAME:.c=.o) $(SRC_LEX:.c=.o)
+OBJ_NAME = $(SRC_NAME:.c=.o) $(SRC_LEX:.c=.o) $(SRC_WORDEXP:.c=.o)
 
 LIB = ./lib/libft.a
 
@@ -63,6 +67,10 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) -I. $(FLAGS) -o $@ -c $<
 
 $(OBJ_PATH)/%.o: $(LEX_PATH)/%.c
+	mkdir -p $(OBJ_PATH)
+	$(CC) -I. $(FLAGS) -o $@ -c $<
+
+$(OBJ_PATH)/%.o: $(WORDEXP_PATH)/%.c
 	mkdir -p $(OBJ_PATH)
 	$(CC) -I. $(FLAGS) -o $@ -c $<
 

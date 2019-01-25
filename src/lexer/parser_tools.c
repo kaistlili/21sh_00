@@ -114,7 +114,7 @@ void	print_redir_lst(t_redir *start)
 
 void	test_simplecmd(t_simple_cmd *cmd)
 {
-	ft_printf(">>>>>>SIMPLE COMMAND======\n");
+	ft_printf(">>>>>>SIMPLE COMMAND============\n");
 	ft_printf("cmd_name:");
 	print_token(cmd->cmd_name);
 	ft_printf("***************************\n");

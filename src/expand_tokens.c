@@ -12,44 +12,6 @@
 
 #include "../minishell.h"
 
-static int		tilde_valid(char *str)
-{
-	if (*str == 0)
-		return (1);
-	if (*str == '/')
-		return (1);
-	return (0);
-}
-
-static char		*tilde_expand(char *homepath, char *arg)
-{
-	size_t	tot_len;
-	char	*expand;
-
-	tot_len = ft_strlen(homepath) + ft_strlen(arg);
-	expand = ft_memalloc(tot_len + 1);
-	if (expand == NULL)
-		return (NULL);
-	ft_strcpy(expand, homepath);
-	if (arg[0] == '~')
-		arg++;
-	ft_strcpy(expand + ft_strlen(homepath), arg);
-	return (expand);
-}
-
-static int		handle_tilde(char **arg, char **tmp, int write, int read)
-{
-	*tmp = get_env_value("HOME");
-	if (*tmp != NULL)
-		*tmp = tilde_expand(*tmp, arg[read]);
-	else
-		*tmp = ft_strdup("\0");
-	if (*tmp == NULL)
-		return (MEMERR);
-	free(arg[write]);
-	arg[write] = *tmp;
-	return (0);
-}
 
 void			init_iterator(int *read, int *write)
 {
@@ -59,7 +21,8 @@ void			init_iterator(int *read, int *write)
 
 int				expand_tokens(char **arg)
 {
-	int		read;
+(void)arg;
+/*	int		read;
 	int		write;
 	char	*tmp;
 
@@ -82,6 +45,6 @@ int				expand_tokens(char **arg)
 	}
 	if (arg[write] != NULL)
 		free_tab_bytes(&arg[write]);
-	arg[write] = NULL;
+	arg[write] = NULL;*/
 	return (0);
 }

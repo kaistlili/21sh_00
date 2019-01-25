@@ -104,7 +104,11 @@ void	print_tokens(t_token *start)
 				"GREAT"};
 	while (start)
 	{
-		ft_printf("type %s |  str '%s'\n", types[start->type], start->data.str);
+		
+		ft_printf("type %s |  str '%s'|", types[start->type], start->data.str);
+		handle_tilde(start);	
+		ft_printf("After str '%s'", start->data.str); 
+		ft_printf("\n");
 		start = start->next;
 	}
 }
