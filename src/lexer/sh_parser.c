@@ -74,6 +74,7 @@ int	test_sh_parser(t_token *start)
 	t_parser parser;
 	int		ret;
 
+	ft_bzero(&parser, sizeof(t_parser));
 	parser.current = start;
 	parser.head = start;
 	ret = expect_complete_cmd(&parser);

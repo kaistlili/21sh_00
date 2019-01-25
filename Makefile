@@ -36,7 +36,7 @@ SRC_NAME =	main.c \
 
 LEX_PATH = src/lexer
 
-SRC_LEX = lexer.c jump_table.c ft_realloc.c sh_parser.c parser_rules.c
+SRC_LEX = lexer.c jump_table.c ft_realloc.c sh_parser.c parser_rules.c parser_tools.c
 
 OBJ_PATH = obj
 

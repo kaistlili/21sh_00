@@ -25,6 +25,17 @@ t_token	*new_token(int	type)
 	return (new);	
 }
 
+t_token	*dup_token(t_token *token)
+{
+	t_token *new;
+
+	if (!(new = new_token(0)))
+		return (NULL);
+	ft_memcpy(new, token, sizeof(t_token));
+	new->next = NULL;
+	return (new);
+}
+
 int	str_putchar(char c, t_str *data)
 {
 	size_t i;

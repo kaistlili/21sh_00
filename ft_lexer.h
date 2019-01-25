@@ -15,6 +15,7 @@
 
 #include "minishell.h"
 
+
 #define DQUOTE_ERR 10
 #define SQUOTE_ERR 11
 #define ENDOFINPUT 12
@@ -34,6 +35,7 @@ typedef	enum	e_token_type
 	WORD,
 	NEWLINE,
 	IO_NUM,
+	FILENAME,
 	ASSIGN,
 	PIPE,
 	SEMI_COL,
@@ -56,9 +58,13 @@ typedef	struct	s_token
 
 typedef struct	s_parser
 {
-	struct s_token	*current;
-	struct s_token 	*head;
-	void			*cmd;
+	struct s_token		*current;
+	struct s_token 		*head;
+	
+	struct s_simple_cmd	*cmd;
+	struct s_redir		*current_redir;	
+	
+	struct	s_simple_cmd *pipeline;
 //	t_ast	**head;
 }				t_parser;
 
@@ -79,7 +85,22 @@ int handle_column(char **input, t_token *token);
 
 int	test_sh_parser(t_token *start);
 /*
-Parser fn
+	intermediate cmd functions
+*/
+typedef struct s_redir t_redir;
+typedef struct s_simple_cmd t_simple_cmd;
+// test functions
+void	print_token(t_token *t);
+void	print_tokens(t_token *start);
+void	test_simplecmd(t_simple_cmd *cmd);
+void	test_pipeline(t_parser *parser);
+//
+int	add_to_pipeline(t_parser *parser);
+int	build_redir(t_token *to_add, t_redir *redir);
+int	build_cmd(t_token *to_add, t_simple_cmd *cmd);
+void	add_redir_lst(t_redir *to_add, t_redir **head);
+/*
+recursive decent functions 
 */
 int	parser_is_assign(t_token const *token);
 int	expect_linebreak(t_parser *parser);
@@ -102,15 +123,17 @@ int	expect_list_suffix(t_parser *parser);
 int	expect_list(t_parser *parser);
 int	expect_complete_cmd(t_parser *parser);
 
+
+
 int	str_putchar(char c, t_str *data);
 int	ft_str_realloc(t_str *str_st, size_t newsz);
 
 int	ft_is_ifs(char c);
 
 void	add_token(t_token **head, t_token *to_add);
+t_token	*dup_token(t_token *token);
 
 t_token	*ft_tokenizer(char *line);
 //int	next_token(char **line, t_token *token);
 int	next_token(char *line, t_token **head);
-
 #endif

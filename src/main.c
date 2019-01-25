@@ -84,14 +84,27 @@ static void		silence_ac_av(char ac, char **av)
 
 void	ft_test_lexer(char *line);
 
+void	print_token(t_token *t)
+{
+	char types[100][100] = {"WORD","NEWLINE","IO_NUM","FILENAME", "ASSIGN", "PIPE", "SEMI_COL",
+				"AMPERS","ANDIF", "ORIF", "LESSAND", "GREATAND", "DGREAT", "LESS",
+				"GREAT"};
+	if (!t)
+	{
+		ft_printf("NULL\n");
+		return;
+	}
+	ft_printf("type %s |  str '%s'\n", types[t->type], t->data.str);
+}
+
 void	print_tokens(t_token *start)
 {
-	char types[100][100] = {"WORD","NEWLINE","IO_NUM","ASSIGN", "PIPE", "SEMI_COL",
+	char types[100][100] = {"WORD","NEWLINE","IO_NUM","FILENAME", "ASSIGN", "PIPE", "SEMI_COL",
 				"AMPERS","ANDIF", "ORIF", "LESSAND", "GREATAND", "DGREAT", "LESS",
 				"GREAT"};
 	while (start)
 	{
-		ft_printf("type %s |  str %s\n", types[start->type], start->data.str);
+		ft_printf("type %s |  str '%s'\n", types[start->type], start->data.str);
 		start = start->next;
 	}
 }

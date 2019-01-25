@@ -67,6 +67,9 @@ int	expect_filename(t_parser *parser)
 	#endif
 	if (parser->current->type == WORD)
 	{
+		parser->current->type = FILENAME;
+		if (build_redir(parser->current, parser->current_redir) == MEMERR)
+			return (MEMERR);
 		parser->current = parser->current->next;
 		ft_printf("validated filename\n");
 		return (1);
@@ -86,6 +89,8 @@ int	expect_io_file(t_parser *parser)
 	if ((parser->current->type >= LESSAND)
 		&& (parser->current->type <= GREAT))
 	{
+		if (build_redir(parser->current, parser->current_redir) == MEMERR)
+			return (MEMERR);
 		parser->current = parser->current->next;
 		if (expect_filename(parser))
 		{
@@ -100,23 +105,35 @@ int	expect_io_file(t_parser *parser)
 int	expect_io_redir(t_parser *parser)
 {
 	t_token *backtrack;
+	t_redir	*redir;
 
 #ifdef DEBUG
 	ft_printf("function: %s\n", "io_redir");
 	ft_printf("tok: %s| type %d\n==============\n", parser->current->data.str, parser->current->type);
 	#endif
+	if (!(redir = ft_memalloc(sizeof(t_redir))))
+		return (MEMERR);
+	parser->current_redir = redir;
 	backtrack = parser->current;
 	if (parser->current->type == IO_NUM)
 	{
+		if (build_redir(parser->current, parser->current_redir) == MEMERR)
+			return (MEMERR);
 		parser->current = parser->current->next;
 		if (expect_io_file(parser))
 		{
 			ft_printf("validated io_redir\n");
+			add_redir_lst(redir, &(parser->cmd->redir_lst));
 			return (1);
 		}
 	}
 	else if (expect_io_file(parser))
+	{
+		add_redir_lst(redir, &(parser->cmd->redir_lst));
 		return (1);
+	}
+	free(redir);
+	parser->current_redir = NULL;
 	parser->current = backtrack;
 	return (0);
 
@@ -131,6 +148,8 @@ int	expect_assign(t_parser *parser)
 	if (parser_is_assign(parser->current))
 	{
 		parser->current->type = ASSIGN;
+		if (build_cmd(parser->current, ((t_simple_cmd*)(parser->cmd))) == MEMERR)
+			return (MEMERR);
 		parser->current = parser->current->next;
 		ft_printf("validated assign\n");
 		return (1);
@@ -154,20 +173,6 @@ int	expect_cmd_pre(t_parser *parser)
 	return (0);
 }
 
-int	expect_word(t_parser *parser)
-{
-#ifdef DEBUG
-	ft_printf("function: %s\n", "word");
-	ft_printf("tok: %s| type %d\n==============\n", parser->current->data.str, parser->current->type);
-	#endif
-	if (parser->current->type == WORD)
-	{
-		parser->current = parser->current->next;
-		ft_printf("validated word\n");
-		return (1);
-	}
-	return (0);
-}
 
 int	expect_cmd_suffix(t_parser *parser)
 {
@@ -186,6 +191,23 @@ int	expect_cmd_suffix(t_parser *parser)
 		
 }
 
+int	expect_word(t_parser *parser)
+{
+#ifdef DEBUG
+	ft_printf("function: %s\n", "word");
+	ft_printf("tok: %s| type %d\n==============\n", parser->current->data.str, parser->current->type);
+	#endif
+	if (parser->current->type == WORD)
+	{
+		if (build_cmd(parser->current, ((t_simple_cmd*)(parser->cmd))) == MEMERR)
+			return (MEMERR);
+		parser->current = parser->current->next;
+		ft_printf("validated word\n");
+		return (1);
+	}
+	return (0);
+}
+
 int	expect_cmd_name(t_parser *parser)
 {
 #ifdef DEBUG
@@ -196,7 +218,8 @@ int	expect_cmd_name(t_parser *parser)
 			&& (!parser_is_assign(parser->current)))
 	{   
 		//we never get here is current tok is assign so check is redundant ?
-		parser->cmd->cmd_name = parser->current;
+		if (build_cmd(parser->current, ((t_simple_cmd*)(parser->cmd))) == MEMERR)
+			return (MEMERR);
 		parser->current = parser->current->next;
 		ft_printf("validated cmd_name\n");
 		return (1);
@@ -210,7 +233,6 @@ int	expect_simple_cmd(t_parser *parser)
 	ft_printf("function: %s\n", "simple_cmd");
 	ft_printf("tok: %s| type %d\n==============\n", parser->current->data.str, parser->current->type);
 	#endif
-	//here we start building cmd struct
 	t_token 		*backtrack;
 	t_simple_cmd 	simple_cmd;
 
@@ -221,13 +243,17 @@ int	expect_simple_cmd(t_parser *parser)
 	{
 		if (expect_cmd_name(parser))
 			expect_cmd_suffix(parser);
-		ft_printf("validated simple with pre\n");
+		ft_printf("validated simple with pre\n%");
+		if (add_to_pipeline(parser) == MEMERR)
+			return (MEMERR);
 		return (1);
 	}
 	else if (expect_cmd_name(parser))
 	{
 		expect_cmd_suffix(parser);
 		ft_printf("validated simple without pre\n");
+		if (add_to_pipeline(parser) == MEMERR)
+			return (MEMERR);
 		return (1);
 	}
 	parser->current = backtrack;	
@@ -271,6 +297,7 @@ int	expect_pipeline(t_parser *parser)
 	{
 		expect_pipeline_suffix(parser);
 		ft_printf("validated pipeline\n");
+		test_pipeline(parser);
 		return (1);
 	}
 	parser->current = backtrack;
@@ -356,11 +383,9 @@ int	expect_list(t_parser *parser)
 	backtrack = parser->current;
 	if (expect_and_or(parser))
 	{
-		if (expect_list_suffix(parser))
-		{
-			ft_printf("validated list\n");
-			return (1);
-		}
+		expect_list_suffix(parser);
+		ft_printf("validated list\n");
+		return (1);
 	}
 	parser->current = backtrack;
 	return (0);

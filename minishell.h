@@ -20,10 +20,10 @@
 # include <sys/wait.h>
 # include <limits.h>
 
-# define MEMERR 1
-# define SYNERR 2
-# define ENVERR 3
-# define ACCERR 4
+# define MEMERR 2 
+# define SYNERR 3
+# define ENVERR 4
+# define ACCERR 5
 
 
 typedef struct			s_redir
@@ -40,6 +40,7 @@ typedef	struct			s_simple_cmd
 	struct s_token		*args_lst;
 	struct s_token		*assign_lst;
 	struct s_redir		*redir_lst;
+	struct s_simple_cmd	*next;
 }						t_simple_cmd;
 /*
 	minishell cmd
