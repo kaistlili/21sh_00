@@ -18,7 +18,9 @@
 
 #define DQUOTE_ERR 10
 #define SQUOTE_ERR 11
-#define ENDOFINPUT 12
+#define BAD_SUB	12
+#define INCOMPLETE_SUB 13
+#define ENDOFINPUT 14 
 
 
 #define INPUTSZ 1024
@@ -130,6 +132,7 @@ int	ft_str_realloc(t_str *str_st, size_t newsz);
 
 int	ft_is_ifs(char c);
 
+int	parser_is_name_c(char c);
 void	add_token(t_token **head, t_token *to_add);
 t_token	*dup_token(t_token *token);
 

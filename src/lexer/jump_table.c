@@ -13,8 +13,6 @@
 #include "../../ft_lexer.h"
 /*
 add mem error exit for str_putchar
-
-when dquote or squtote is incomplete, somehow we free in add_token
 */
 int	handle_dquote(char **input, t_token *token)
 {
@@ -95,6 +93,37 @@ int	handle_digit(char **input, t_token *token)
 	return (0);
 }
 
+int	handle_param_exp(char **input, t_token *token)
+{
+	if (str_putchar(**input, &(token->data)) == MEMERR)
+		return (MEMERR);
+	*input = *input + 1;
+	if (**input == '{')
+	{
+		if (str_putchar(**input, &(token->data)) == MEMERR)
+			return (MEMERR);
+		*input = *input + 1;
+		if (**input == '}')
+			return (BAD_SUB);
+		while (**input)
+		{
+			if (!parser_is_name_c(**input))
+				break;
+			if (str_putchar(**input, &(token->data)) == MEMERR)
+				return (MEMERR);
+			*input = *input + 1;	
+		}
+		if (**input == 0)
+			return (INCOMPLETE_SUB);
+		if (**input != '}')
+			return (BAD_SUB);
+		if (str_putchar(**input, &(token->data)) == MEMERR)
+			return (MEMERR);
+		*input = *input + 1;	
+	}
+	return (0);
+}
+
 int	handle_common(char **input, t_token *token)
 {
 	char 			*iter;
@@ -110,6 +139,8 @@ int	handle_common(char **input, t_token *token)
 			err_ret = handle_dquote(&iter, token);
 		else if (*iter == '\'')
 			err_ret = handle_squote(&iter, token);
+		else if (*iter == '$')
+			err_ret = handle_param_exp(&iter, token);
 		if (err_ret)
 			return (err_ret);
 		if ((ft_is_ifs(*iter)) || (ft_strchr(ops, *iter)))

@@ -12,7 +12,7 @@
 
 #include "../../ft_lexer.h"
 
-static int	parser_is_name_c(char c)
+int	parser_is_name_c(char c)
 {
 	if ((c == '_') || (ft_isalnum(c)))
 		return (1);

@@ -223,6 +223,7 @@ t_token	*ft_tokenizer(char *line)
 	static	int		flag = 0;
 	t_token			*tmp;
 	t_token			*head;
+	int				ret;
 
 	if (!flag)
 		init_jump_table(table);
@@ -236,9 +237,14 @@ t_token	*ft_tokenizer(char *line)
 		if (!tmp)
 			return (NULL);
 		if ((*line) > 0 )
-			table[(int)*line](&line, tmp);
+			ret = table[(int)*line](&line, tmp);
 		else
-			table[1](&line, tmp);
+			ret = table[1](&line, tmp);
+		if (ret)
+		{
+			ft_printf("lexer error %d\n", ret);
+			exit(1);
+		}
 		add_token(&head, tmp);
 		while (ft_is_ifs(*line))
 			line++;
