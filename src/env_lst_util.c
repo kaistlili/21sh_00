@@ -46,14 +46,15 @@ t_environ	*env_to_lst(char *env_var)
 		return (NULL);
 	return (new_env_node(name, value));
 }
-
+/*this was modified because get_env_value is broken
+*/
 t_environ	*get_env_node(char *name)
 {
 	size_t		len;
 	t_environ	*tmp;
 
 	len = 0;
-	while ((name[len] != 0))
+	while (valid_env_char(name[len]))
 		len++;
 	if (len == 0)
 		return (NULL);

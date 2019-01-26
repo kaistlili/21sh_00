@@ -12,6 +12,21 @@
 
 #include "../../minishell.h"
 
+
+int	next_squote(char *str, int index)
+{
+	while ((str[index] != 0) && (str[index] != '\''))
+		index++;
+	return (index);
+}
+
+int next_dquote(char *str, int index)
+{
+	while ((str[index] != 0) && (str[index] != '"'))
+		index++;
+	return (index);
+}
+
 int	tilde_valid(char c)
 {
 	if ((c == 0) || (c == '/') || (c == ':'))
@@ -49,16 +64,18 @@ int	insert_str(t_str *word, int *index, char *to_insert)
 	free(save);
 	return (0);
 }
-
+/*  0 1 2 3 4 5 6
+	a b c $ d e f
+*/
 int	expand_tilde(t_str *word, int *index)
 {
 	char *home;
 
 	ft_memmove(word->str + *index, word->str + *index + 1, word->len - *index);
 	word->len = word->len - 1;
-	word->str[word->len] = 0;
+	word->str[word->len] = '\0';
 	home = get_env_value("HOME");
-	if ((!home) || (*home == 0))
+	if ((!home) || (*home == '\0'))
 		return (0);	
 	if (!(home = quote_home(home)))
 		return (MEMERR);
@@ -66,20 +83,6 @@ int	expand_tilde(t_str *word, int *index)
 		return (MEMERR);
 	free(home);
 	return (0);
-}
-
-int	next_squote(char *str, int index)
-{
-	while ((str[index] != 0) && (str[index] != '\''))
-		index++;
-	return (index);
-}
-
-int next_dquote(char *str, int index)
-{
-	while ((str[index] != 0) && (str[index] != '"'))
-		index++;
-	return (index);
 }
 
 
@@ -92,7 +95,7 @@ int	expand_tilde_assign(t_str *word, int index)
 	while (word->str[index])
 	{
 		if ((word->str[index] == ':') && (word->str[index + 1] == '~'))
-		{
+		{ //maybe check if next is tilde_valid?
 			index++;
 			if (expand_tilde(word, &index) == MEMERR)
 				return (MEMERR);

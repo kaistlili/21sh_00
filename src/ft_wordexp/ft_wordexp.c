@@ -26,34 +26,122 @@ int	expand_param(t_token *word)
 	upadte lexer to recognise ${ and prompt for newline when ${ has no matching } done
 	nested backslash, squote and dquote in {} is "bad substitution" done
 	any invalid assign name is bad substitution done
-
+	" ' and \ must be quoted to prevent messing field split
 dont forget $ followed by \0 is like quoted
 
 */
-/*
-int	expand_params(t_token *word)
+
+
+char *quote_str(char *str)
+{
+	size_t 	count;
+	int		j;
+	int		i;
+	char	*quoted;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if ((str[i] == '\'') || (str[i] == '"') || (str[i] == '\\'))
+			count++;
+		i++;
+	}
+	if (!(quoted = ft_strnew(i + count)))
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if ((str[i] == '\'') || (str[i] == '"') || (str[i] == '\\'))
+		{
+			quoted[j] = '\\';
+			j++;
+		}
+		quoted[j] = str[i];
+		i++;
+		j++;
+	}
+	return (quoted);
+}
+
+int	expand_param(t_str *str_w, int *index, char *to_insert)
+{
+	int		trunc;
+	int		i;
+
+	i = *index + 1;
+	trunc = 1; /* single $*/
+	if (str_w->str[i] == '{')
+	{
+		i++;
+		trunc = 3;
+	}
+	while (parser_is_name_c(str_w->str[i]))
+	{
+		trunc++;
+		i++;
+	}
+	ft_memmove(str_w->str + *index, str_w->str + *index + trunc, str_w->len - *index - trunc);
+	str_w->len = str_w->len - trunc;
+	str_w->str[str_w->len] = '\0';
+	if (insert_str(str_w, index, to_insert) == MEMERR)
+		return (MEMERR);
+	return (0);
+}
+
+char *build_param(t_str *str_w, int index)
+{
+	char *value;
+	static char *empty_str = "";
+
+	if (str_w->str[index] == '{')
+		index++;
+	value = get_env_value(str_w->str + index);
+	if (!value)
+		value = empty_str;
+	if (!(value = quote_str(value)))
+		return (NULL); /*MEMERR*/
+	return (value);
+}
+
+int	next_bslash(char *str, int index)
+{
+	if ((str[index + 1] != '\0'))
+		return (index++);
+	return (index);
+}
+
+int	handle_exp_param(t_token *word)
 {
 	int index;
-	int	move;
 	char *value;
 
 	index = 0;
-	move = 0;
 	while (word->data.str[index])
 	{
 		if ((word->data.str[index] == '$') && (word->data.str[index + 1] != 0))
 		{
-			
-				
+			value = build_param(&(word->data), index + 1);
+			if (!value)
+				return (MEMERR);
+			if (expand_param(&(word->data), &index, value) == MEMERR)
+				return (MEMERR);
+			continue;
 		}
+		else if (word->data.str[index] == '\'')
+			index = next_squote(word->data.str, index);
+		else if (word->data.str[index] == '\\')
+			index = next_bslash(word->data.str, index);
+		index++;
 	}
+	return (0);
 }
-*/
-
 int	ft_wordexp(t_token *word)
 {
 	if (handle_tilde(word) == MEMERR)
 		return (MEMERR);
-	
+	if (handle_exp_param(word) == MEMERR)
+		return (MEMERR);
 	return (0);
 }

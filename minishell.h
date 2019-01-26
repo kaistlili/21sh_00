@@ -120,6 +120,8 @@ int						cd_error(int errnum, char *str);
 char					*getoldpwd(void);
 /* wordexp */
 typedef struct s_str t_str;
-int	handle_tilde(struct s_token *word);
+typedef	struct	s_token t_token;
+int	ft_wordexp(t_token *word);
+int	handle_tilde(t_token *word);
 int	insert_str(t_str *word, int *index, char *to_insert);
 #endif

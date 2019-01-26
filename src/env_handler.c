@@ -52,7 +52,8 @@ char	*tab_get_value(char *name, char **env)
 	}
 	return (NULL);
 }
-
+/*
+	this is broken, we mix NULL memerror with NULL no var found
 char	*get_env_value(char *name)
 {
 	t_environ	*tmp;
@@ -68,6 +69,17 @@ char	*get_env_value(char *name)
 	ft_strncpy(clean_name, name, i);
 	tmp = get_env_node(clean_name);
 	free(clean_name);
+	if (tmp != NULL)
+		return (tmp->value);
+	return (NULL);
+}
+
+*/
+char	*get_env_value(char *name)
+{
+	t_environ	*tmp;
+
+	tmp = get_env_node(name);
 	if (tmp != NULL)
 		return (tmp->value);
 	return (NULL);

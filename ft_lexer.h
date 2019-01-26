@@ -104,7 +104,6 @@ void	add_redir_lst(t_redir *to_add, t_redir **head);
 /*
 recursive decent functions 
 */
-int	parser_is_assign(t_token const *token);
 int	expect_linebreak(t_parser *parser);
 int	expect_separator_op(t_parser *parser);
 int	expect_separator(t_parser *parser);
@@ -125,14 +124,17 @@ int	expect_list_suffix(t_parser *parser);
 int	expect_list(t_parser *parser);
 int	expect_complete_cmd(t_parser *parser);
 
-
-
+/*parser util functions */
+int	parser_is_assign(t_token const *token);
+int	parser_is_name_c(char c);
+int next_squote(char *str, int index);
+int	next_dquote(char *str, int index);
+/*t_str functions*/
 int	str_putchar(char **c, t_str *data);
 int	ft_str_realloc(t_str *str_st, size_t newsz);
 
 int	ft_is_ifs(char c);
 
-int	parser_is_name_c(char c);
 void	add_token(t_token **head, t_token *to_add);
 t_token	*dup_token(t_token *token);
 

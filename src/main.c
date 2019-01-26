@@ -106,7 +106,8 @@ void	print_tokens(t_token *start)
 	{
 		
 		ft_printf("type %s |  str '%s'|", types[start->type], start->data.str);
-		handle_tilde(start);	
+		if (ft_wordexp(start) == MEMERR)
+		{ft_printf("wordexp memerr\n");exit(1);}	
 		ft_printf("After str '%s'", start->data.str); 
 		ft_printf("\n");
 		start = start->next;
