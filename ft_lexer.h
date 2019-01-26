@@ -127,7 +127,7 @@ int	expect_complete_cmd(t_parser *parser);
 
 
 
-int	str_putchar(char c, t_str *data);
+int	str_putchar(char **c, t_str *data);
 int	ft_str_realloc(t_str *str_st, size_t newsz);
 
 int	ft_is_ifs(char c);

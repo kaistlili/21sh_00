@@ -36,6 +36,20 @@ t_token	*dup_token(t_token *token)
 	return (new);
 }
 
+int	str_putchar(char **c, t_str *data)
+{
+	size_t i;
+
+	i = data->len;
+	data->str[i] = **c;
+	*c = *c + 1;
+	data->len = i + 1;
+	if (data->len == data->size)
+		if (ft_str_realloc(data, INPUTSZ) == MEMERR)
+			return (MEMERR);
+	return (0);	
+}
+/*
 int	str_putchar(char c, t_str *data)
 {
 	size_t i;
@@ -48,7 +62,7 @@ int	str_putchar(char c, t_str *data)
 			return (MEMERR);
 	return (0);	
 }
-
+*/
 int	ft_is_ifs(char c)
 {
 	static char *ifs = NULL;

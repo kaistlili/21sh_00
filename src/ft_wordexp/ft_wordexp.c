@@ -30,7 +30,7 @@ int	expand_param(t_token *word)
 dont forget $ followed by \0 is like quoted
 
 */
-
+/*
 int	expand_params(t_token *word)
 {
 	int index;
@@ -48,7 +48,7 @@ int	expand_params(t_token *word)
 		}
 	}
 }
-
+*/
 
 int	ft_wordexp(t_token *word)
 {
