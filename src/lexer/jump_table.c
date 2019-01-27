@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+		/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   jump_table.c                                       :+:      :+:    :+:   */
@@ -29,8 +29,7 @@ int	handle_dquote(char **input, t_token *token)
 		{
 			if (str_putchar(input, &(token->data)) == MEMERR)
 				return (MEMERR);
-			handle_common(input, token);
-			return (0);
+			return (handle_common(input, token));
 		}
 		else if ((**input == '\\') && (*(*input + 1)))
 		{
@@ -51,7 +50,8 @@ int handle_squote(char **input, t_token *token)
 			return (MEMERR);
 		if (**input == '\'')
 		{
-			*input = *input + 1;
+			if (str_putchar(input, &(token->data)) == MEMERR)
+				return (MEMERR);
 			return (0);
 		}
 	}
@@ -64,16 +64,12 @@ int	handle_digit(char **input, t_token *token)
 
 	while (**input)
 	{
-		if ((ft_is_ifs(**input)) || (ft_strchr(ops, **input)))
+		if ((ft_is_ifs(**input)) || (ft_strchr(ops, **input))
+				|| (!ft_isdigit(**input)))
 		{
 			if (ft_strchr("><", **input))
 				token->type = IO_NUM;
 			break;
-		}
-		else if ((**input == '\\') && (*(*input + 1)))
-		{
-			if (str_putchar(input, &(token->data)) == MEMERR)
-				return (MEMERR);
 		}
 		if (str_putchar(input, &(token->data)) == MEMERR)
 			return (MEMERR);
@@ -116,23 +112,27 @@ int	handle_common(char **input, t_token *token)
 	err_ret = 0;
 	while (**input)
 	{
+		if ((ft_is_ifs(**input)) || (ft_strchr(ops, **input)))
+			break;
 		if (**input == '"')
 			err_ret = handle_dquote(input, token);
 		else if (**input == '\'')
 			err_ret = handle_squote(input, token);
 		else if (**input == '$')
 			err_ret = handle_param_exp(input, token);
-		if (err_ret)
-			return (err_ret);
-		if ((ft_is_ifs(**input)) || (ft_strchr(ops, **input)))
-			break;
 		else if ((**input == '\\') && (*(*input + 1)))
+		{
+			if ((str_putchar(input, &(token->data)) == MEMERR)
+				|| (str_putchar(input, &(token->data)) == MEMERR))
+				return (MEMERR);
+		}
+		else
 		{
 			if (str_putchar(input, &(token->data)) == MEMERR)
 				return (MEMERR);
 		}
-		if (str_putchar(input, &(token->data)) == MEMERR)
-			return (MEMERR);
+		if (err_ret)
+			return (err_ret);
 	}
 	return (0);
 }

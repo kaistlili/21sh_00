@@ -14,7 +14,8 @@ NAME = libft.a
 
 SRC_PATH = src
 
-SRC_NAME =	ft_splitblanks.c \
+SRC_NAME =	ft_strnsplit.c \
+			ft_splitblanks.c \
 			itoa_base.c \
 			ft_printf.c \
 			ft_parser.c \

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktlili <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -25,6 +25,26 @@ t_token	*new_token(int	type)
 	return (new);	
 }
 
+void	free_token_lst(t_token *token)
+{
+	t_token *save;
+
+	save = token;
+	while (token)
+	{
+		save = token->next;
+		free_token(token);
+		token = save;
+	}
+}
+
+void	free_token(t_token *token)
+{
+	if (token->data.str)
+		free(token->data.str);
+	free(token);
+}
+
 t_token	*dup_token(t_token *token)
 {
 	t_token *new;
@@ -34,6 +54,21 @@ t_token	*dup_token(t_token *token)
 	ft_memcpy(new, token, sizeof(t_token));
 	new->next = NULL;
 	return (new);
+}
+
+int	str_putnstr(char *str, t_str *data, size_t n)
+{
+	char *ptr;
+
+	ptr = str;
+
+	while ((*str) && (n))
+	{
+		n--;
+		if (str_putchar(&str, data) == MEMERR)
+			return (MEMERR);
+	}
+	return (0);
 }
 
 int	str_putchar(char **c, t_str *data)
@@ -63,14 +98,16 @@ int	str_putchar(char c, t_str *data)
 	return (0);	
 }
 */
+/*
+this has to be change to is_whitespace
+*/
 int	ft_is_ifs(char c)
 {
-	static char *ifs = NULL;
+	static char *ifs = "\n\t ";
+
 	int			i;
 
 	i = 0;
-	if (!ifs)
-		ifs = "\n\t ";
 	while (ifs[i])
 	{
 		if (ifs[i] == c)
@@ -256,8 +293,7 @@ t_token	*ft_tokenizer(char *line)
 			ret = table[1](&line, tmp);
 		if (ret)
 		{
-			ft_printf("lexer error %d\n", ret);
-			exit(1);
+			return (NULL);
 		}
 		add_token(&head, tmp);
 		while (ft_is_ifs(*line))

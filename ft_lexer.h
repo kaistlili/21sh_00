@@ -129,7 +129,9 @@ int	parser_is_assign(t_token const *token);
 int	parser_is_name_c(char c);
 int next_squote(char *str, int index);
 int	next_dquote(char *str, int index);
+int	next_bslash(char *str, int index);
 /*t_str functions*/
+int	str_putnstr(char *str, t_str *data, size_t n);
 int	str_putchar(char **c, t_str *data);
 int	ft_str_realloc(t_str *str_st, size_t newsz);
 
@@ -137,7 +139,9 @@ int	ft_is_ifs(char c);
 
 void	add_token(t_token **head, t_token *to_add);
 t_token	*dup_token(t_token *token);
-
+t_token	*new_token(int type);
+void	free_token(t_token *token);
+void	free_token_lst(t_token *token);
 t_token	*ft_tokenizer(char *line);
 //int	next_token(char **line, t_token *token);
 int	next_token(char *line, t_token **head);

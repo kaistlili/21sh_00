@@ -31,6 +31,12 @@ dont forget $ followed by \0 is like quoted
 
 */
 
+int	next_bslash(char *str, int index)
+{
+	if ((str[index + 1] != '\0'))
+		return (index + 1);
+	return (index);
+}
 
 char *quote_str(char *str)
 {
@@ -105,21 +111,19 @@ char *build_param(t_str *str_w, int index)
 	return (value);
 }
 
-int	next_bslash(char *str, int index)
-{
-	if ((str[index + 1] != '\0'))
-		return (index++);
-	return (index);
-}
 
 int	handle_exp_param(t_token *word)
 {
 	int index;
 	char *value;
+	int inside_dquote;
 
 	index = 0;
+	inside_dquote = 1; /* > 0 when outside dquotes, < 0 when inside dquotes */
 	while (word->data.str[index])
 	{
+		if (word->data.str[index] == '"')
+			inside_dquote = -inside_dquote; 
 		if ((word->data.str[index] == '$') && (word->data.str[index + 1] != 0))
 		{
 			value = build_param(&(word->data), index + 1);
@@ -129,7 +133,7 @@ int	handle_exp_param(t_token *word)
 				return (MEMERR);
 			continue;
 		}
-		else if (word->data.str[index] == '\'')
+		else if ((word->data.str[index] == '\'') && (inside_dquote == 1))
 			index = next_squote(word->data.str, index);
 		else if (word->data.str[index] == '\\')
 			index = next_bslash(word->data.str, index);
@@ -137,11 +141,18 @@ int	handle_exp_param(t_token *word)
 	}
 	return (0);
 }
+
 int	ft_wordexp(t_token *word)
 {
 	if (handle_tilde(word) == MEMERR)
 		return (MEMERR);
+
+	ft_printf("=========\nbefore exp\n==============\n");
+	print_token(word);
+	ft_printf("=============================================\n");
 	if (handle_exp_param(word) == MEMERR)
 		return (MEMERR);
-	return (0);
+	if (handle_field_split(word) == MEMERR)
+		return (MEMERR);
+return (0);
 }

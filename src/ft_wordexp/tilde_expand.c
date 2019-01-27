@@ -15,6 +15,7 @@
 
 int	next_squote(char *str, int index)
 {
+	index++;
 	while ((str[index] != 0) && (str[index] != '\''))
 		index++;
 	return (index);
@@ -22,8 +23,13 @@ int	next_squote(char *str, int index)
 
 int next_dquote(char *str, int index)
 {
-	while ((str[index] != 0) && (str[index] != '"'))
+	index++;
+	while (str[index] != 0) 
+	{
+		if ((str[index] == '"') && (str[index - 1] != '\\'))
+			break;
 		index++;
+	}
 	return (index);
 }
 

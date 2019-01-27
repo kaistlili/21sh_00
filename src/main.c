@@ -96,12 +96,13 @@ void	print_token(t_token *t)
 	}
 	ft_printf("type %s |  str '%s'\n", types[t->type], t->data.str);
 }
-
+/*
 void	print_tokens(t_token *start)
 {
 	char types[100][100] = {"WORD","NEWLINE","IO_NUM","FILENAME", "ASSIGN", "PIPE", "SEMI_COL",
 				"AMPERS","ANDIF", "ORIF", "LESSAND", "GREATAND", "DGREAT", "LESS",
 				"GREAT"};
+	t_token *save;
 	while (start)
 	{
 		
@@ -110,6 +111,25 @@ void	print_tokens(t_token *start)
 		{ft_printf("wordexp memerr\n");exit(1);}	
 		ft_printf("After str '%s'", start->data.str); 
 		ft_printf("\n");
+		start = save;
+	}
+}*/
+
+void	print_tokens(t_token *t)
+{
+	while (t)
+	{
+		print_token(t);
+		t = t->next;
+	}
+}
+
+void	expansion_tester(t_token *start)
+{
+	while (start)
+	{
+		if (ft_wordexp(start) == MEMERR)
+		{ft_printf("wordexp memerr\n");exit(1);}		
 		start = start->next;
 	}
 }
@@ -136,10 +156,24 @@ int				main(int ac, char **av, char **env)
 		free_cmdlst(*command_lst);*/
 	/*	if (ft_tokenizer(line, &tok) == 0)
 		{*/
+		ft_printf("**********************\n");
+		ft_printf("cmdline: '%s'", line);
+		ft_printf("**********************\n");
 		tok = ft_tokenizer(line);
-//		ft_test_lexer(line);
-		test_sh_parser(tok);
-		print_tokens(tok);	
+		if (!tok)
+		{
+			ft_printf("21sh: lexer error\n");
+		}
+		else
+		{
+	//		ft_test_lexer(line);
+			test_sh_parser(tok);
+	//		print_tokens(tok);
+			ft_printf("==========================================\n");
+			expansion_tester(tok);
+			print_tokens(tok);
+			free_token_lst(tok);
+		}
 		free(line);
 		*command_lst = NULL;
 		show_prompt();
