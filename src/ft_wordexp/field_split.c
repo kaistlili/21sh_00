@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../../ft_wordexp.h"
 
 int	is_ifs(char c, char *ifs)
 {
@@ -118,37 +118,7 @@ int	handle_ifs(t_token *word, char *ifs)
 	replace_token(word, new_fields);
 	return (0);	
 }
-/*
-int	handle_ifs(t_token *word, char *ifs)
-{
-	int index;
-	t_token	*new_fields;
 
-	ft_trim_ifs(&(word->data), ifs);
-	if (!split_candidate(word->data.str, ifs))
-		return (0);
-	index = 0;
-	new_fields = NULL;
-	while(word->data.str[index])
-	{
-		while (is_ifs(word->data.str[index], ifs))
-			index++;
-		if (word->data.str[index] == '\'')
-			index = next_squote(word->data.str, index) + 1;
-		else if (word->data.str[index] == '"')
-			index = next_dquote(word->data.str, index) + 1;
-		else if (word->data.str[index] == '\\')
-			index = next_bslash(word->data.str, index) + 1;
-		else
-		{
-			if (extract_field(&(word->data), &index, &new_fields, ifs) == MEMERR)
-				return (MEMERR);
-		}
-	}
-	replace_token(word, new_fields);
-	return (0);	
-}
-*/
 int handle_field_split(t_token *word)
 {
 	char *ifs;

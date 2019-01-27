@@ -40,7 +40,12 @@ SRC_LEX = lexer.c jump_table.c ft_realloc.c sh_parser.c parser_rules.c parser_to
 
 WORDEXP_PATH = src/ft_wordexp
 
-SRC_WORDEXP = ft_wordexp.c tilde_expand.c field_split.c
+SRC_WORDEXP =	ft_wordexp.c \
+				tilde_expand.c \
+				field_split.c \
+				param_expand.c \
+				quote_removal.c \
+				expansion_util.c
 
 OBJ_PATH = obj
 

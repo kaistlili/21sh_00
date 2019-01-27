@@ -135,6 +135,8 @@ int	str_putnstr(char *str, t_str *data, size_t n);
 int	str_putchar(char **c, t_str *data);
 int	ft_str_realloc(t_str *str_st, size_t newsz);
 
+
+/*random util functions*/
 int	ft_is_ifs(char c);
 
 void	add_token(t_token **head, t_token *to_add);

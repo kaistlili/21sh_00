@@ -125,6 +125,7 @@ int	ft_wordexp(t_token *word);
 int	handle_tilde(t_token *word);
 int	handle_exp_param(t_token *word);
 int	handle_field_split(t_token *word);
+int	quote_removal(t_token *word);
 int	insert_str(t_str *word, int *index, char *to_insert);
 
 #endif

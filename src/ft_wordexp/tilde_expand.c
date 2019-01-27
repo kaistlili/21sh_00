@@ -10,28 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
-
-
-int	next_squote(char *str, int index)
-{
-	index++;
-	while ((str[index] != 0) && (str[index] != '\''))
-		index++;
-	return (index);
-}
-
-int next_dquote(char *str, int index)
-{
-	index++;
-	while (str[index] != 0) 
-	{
-		if ((str[index] == '"') && (str[index - 1] != '\\'))
-			break;
-		index++;
-	}
-	return (index);
-}
+#include "../../ft_wordexp.h"
 
 int	tilde_valid(char c)
 {
@@ -39,6 +18,7 @@ int	tilde_valid(char c)
 		return (1);
 	return (0);
 }
+
 char	*quote_home(char *str)
 {
 	char *new;
