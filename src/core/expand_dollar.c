@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../sh_core.h"
 
 static int	init_dbuff(t_list *buffer, char *line)
 {

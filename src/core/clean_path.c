@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../sh_core.h"
 
 static char	*next_dir(char *path)
 {

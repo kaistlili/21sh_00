@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../sh_core.h"
 
 static char	*test_access(char *path, char *binname, int *ret)
 {

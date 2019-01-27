@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../sh_core.h"
 
 static char		**construct_env(t_command *cmd, char opt, int count)
 {

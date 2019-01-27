@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../sh_core.h"
 
 static int	check_cdpath(char **curpath, char *cd_path)
 {

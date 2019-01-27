@@ -12,7 +12,7 @@
 
 NAME = 21sh 
 
-SRC_PATH = src
+SRC_PATH = src/core
 
 SRC_NAME =	main.c \
 			util.c \
@@ -36,7 +36,12 @@ SRC_NAME =	main.c \
 
 LEX_PATH = src/lexer
 
-SRC_LEX = lexer.c jump_table.c ft_realloc.c sh_parser.c parser_rules.c parser_tools.c
+SRC_LEX =	lexer.c \
+			lex_jump_table.c \
+			ft_realloc.c \
+			sh_parser.c \
+			parser_rules.c \
+			parser_tools.c
 
 WORDEXP_PATH = src/ft_wordexp
 

@@ -13,7 +13,7 @@
 #ifndef FT_LEXER_H
 # define FT_LEXER_H
 
-#include "minishell.h"
+#include "sh_core.h"
 
 
 #define DQUOTE_ERR 10

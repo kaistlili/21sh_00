@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../sh_core.h"
 
 t_environ **g_environ = NULL;
 
@@ -162,7 +162,7 @@ int				main(int ac, char **av, char **env)
 		tok = ft_tokenizer(line);
 		if (!tok)
 		{
-			ft_printf("21sh: lexer error\n");
+			ft_printf("../sh_core: lexer error\n");
 		}
 		else
 		{

@@ -13,7 +13,7 @@
 #ifndef FT_WORDEXP_H
 # define FT_WORDEXP_H
 
-#include "minishell.h"
+#include "sh_core.h"
 /* wordexp */
 typedef struct s_str t_str;
 typedef	struct	s_token t_token;

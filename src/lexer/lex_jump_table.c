@@ -1,7 +1,7 @@
-		/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   jump_table.c                                       :+:      :+:    :+:   */
+/*   lex_jump_table.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktlili <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,8 @@
 
 #include "../../ft_lexer.h"
 /*
-add mem error exit for str_putchar
+add mem error exit for str_putchar done
+add lex error for backslash followed by EOI
 */
 
 
